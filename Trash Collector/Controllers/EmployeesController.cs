@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Trash_Collector.ActionFilters;
 using Trash_Collector.Data;
 using Trash_Collector.Models;
 
 namespace Trash_Collector.Controllers
 {
+    [Authorize(Roles = "Employee")]
+    [ServiceFilter(typeof(GlobalRouting))]
     public class EmployeesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,6 +26,7 @@ namespace Trash_Collector.Controllers
         // GET: Employees
         public async Task<IActionResult> Index()
         {
+            string currentDay = DateTime.Now.DayOfWeek.ToString();
             var applicationDbContext = _context.Employee.Include(e => e.IdentityUser);
             return View(await applicationDbContext.ToListAsync());
         }
@@ -48,6 +53,7 @@ namespace Trash_Collector.Controllers
         // GET: Employees/Create
         public IActionResult Create()
         {
+
             ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
