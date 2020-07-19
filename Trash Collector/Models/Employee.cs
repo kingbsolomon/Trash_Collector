@@ -25,15 +25,24 @@ namespace Trash_Collector.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-        [Display(Name = "MI")]
-        public char MiddleInit { get; set; }
-
-        [Required, EmailAddress]
-        [Display(Name = "Email Address")]
-        public string EmailAddress { get; set; }
-
         [Required, MaxLength(5)]
         [Display(Name="Zip Code Managed")]
-        public int ZipCode { get; set; }
+        public string ZipCode { get; set; }
+
+        [NotMapped]
+        public string SearchBy { get; set; }
+
+        public enum DayWeek
+         {
+           Sunday,
+           Monday,
+           Tuesday,
+           Wednesday,
+           Thursday,
+           Friday,
+           Saturday
+         }
+        
+
     }
 }

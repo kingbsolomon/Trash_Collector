@@ -10,7 +10,7 @@ using Trash_Collector.Data;
 namespace Trash_Collector.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200717204044_Initial")]
+    [Migration("20200719050609_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,15 +50,15 @@ namespace Trash_Collector.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "a7133f03-a276-41fa-9e90-ccd46a220f0a",
-                            ConcurrencyStamp = "c36e5a4b-3766-47e1-8216-b86759bbede3",
+                            Id = "87d79e85-b18b-409d-9a25-2320cbd69825",
+                            ConcurrencyStamp = "764b24e3-518d-42db-bb3f-3601bc5659e0",
                             Name = "Customer",
                             NormalizedName = "Customer"
                         },
                         new
                         {
-                            Id = "ff84793b-db23-4667-9964-a20406d1f549",
-                            ConcurrencyStamp = "e50f5dfb-7ec8-41fc-8f50-c340ab14be36",
+                            Id = "547a9421-bfd0-44d9-98a3-2f87498f77a4",
+                            ConcurrencyStamp = "07513fdc-8e1d-44a4-8ff2-eea171688192",
                             Name = "Employee",
                             NormalizedName = "Employee"
                         });
@@ -244,6 +244,9 @@ namespace Trash_Collector.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("BeenPicked")
+                        .HasColumnType("bit");
+
                     b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -256,6 +259,9 @@ namespace Trash_Collector.Migrations
 
                     b.Property<double>("CustomerBalance")
                         .HasColumnType("float");
+
+                    b.Property<string>("DayWeek")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -277,9 +283,6 @@ namespace Trash_Collector.Migrations
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte>("PickUpDay")
-                        .HasColumnType("tinyint");
 
                     b.Property<string>("State")
                         .IsRequired()
@@ -311,10 +314,6 @@ namespace Trash_Collector.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("EmailAddress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -326,12 +325,9 @@ namespace Trash_Collector.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("MiddleInit")
+                    b.Property<string>("ZipCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(1)");
-
-                    b.Property<int>("ZipCode")
-                        .HasColumnType("int")
+                        .HasColumnType("nvarchar(5)")
                         .HasMaxLength(5);
 
                     b.HasKey("Id");

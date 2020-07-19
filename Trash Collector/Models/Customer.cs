@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -49,10 +51,17 @@ namespace Trash_Collector.Models
 
         public int CreditCard { get; set; }
 
+        [DataType(DataType.Date)]
+        [Display(Name ="Custom Trash Pickup Day")]
         public DateTime CustomPickup { get; set; }
+        public bool BeenPicked { get; set; }
 
+        [DataType(DataType.Date)]
+        [Display(Name = "Start Date")]
         public DateTime SuspendStart { get; set; }
 
+        [DataType(DataType.Date)]
+        [Display(Name ="End Date")]
         public DateTime SuspendEnd { get; set; }
 
         public double CustomerBalance
@@ -60,18 +69,20 @@ namespace Trash_Collector.Models
             get { return balance; }
             set { balance = value; }
         }
+       
+        [Display(Name ="Trash Pickup Day")]
+        public string DayWeek { get; set; }
 
-        public byte PickUpDay { get; set; }
     }
 
-    public enum DaysWeek
+    /*public enum DayWeek
     {
-        Sunday = 1,
+        Sunday,
         Monday,
         Tuesday,
         Wednesday,
         Thursday,
         Friday,
         Saturday
-    }
+    }*/
 }

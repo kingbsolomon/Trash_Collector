@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Trash_Collector.ActionFilters;
 using Trash_Collector.Data;
 using Trash_Collector.Models;
@@ -48,18 +49,14 @@ namespace Trash_Collector.Controllers
         // GET: Customers/Create
         public IActionResult Create()
         {
-            Customer customer = new Customer();
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            customer.IdentityUserId = userId;
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id");
-            return View(customer);
+            return View();
         }
 
         // POST: Customers/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public IActionResult Create([Bind("FirstName,LastName,PhoneNumber,Address,City,State,ZipCode,Longtitude,Latitude,CreditCard,CustomPickup,SuspendStart,SuspendEnd,CustomerBalance,PickUpDay")] Customer customer)
+        public IActionResult Create([Bind("Id,IdentityUserId,FirstName,LastName,PhoneNumber,Address,City,State,ZipCode,CustomerBalance,DayWeek")] Customer customer)
         {
             if (ModelState.IsValid)
             {
@@ -79,8 +76,8 @@ namespace Trash_Collector.Controllers
             {
                 return RedirectToAction("Index");
             }
-
-            var customer = _context.Customer.Find(id);
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var customer = _context.Customer.Where(c => c.IdentityUserId == userId).SingleOrDefault();
             if (customer == null)
             {
                 return RedirectToAction("Index");
@@ -92,33 +89,23 @@ namespace Trash_Collector.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, [Bind("Id,IdentityUserId,FirstName,LastName,MiddleInit,PhoneNumber,EmailAddress,Address,City,State,ZipCode,CreditCard,PickUpDay")] Customer customer)
+        public ActionResult Edit([Bind("Id,IdentityUserId,FirstName,LastName,PhoneNumber,Address,City,State,ZipCode,DayWeek")] Customer customer)
         {
-            if (id != customer.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(customer);
+                    var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    customer.IdentityUserId = userId;
+                    //_context.Entry(customer).State = EntityState.Modified;
+                    _context.Customer.Update(customer);
                     _context.SaveChanges();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch
                 {
-                    if (!CustomerExists(customer.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return View();
                 }
-                return RedirectToAction("Index");
+                return RedirectToAction("Details");
             }
             return View(customer);
         }
@@ -130,14 +117,12 @@ namespace Trash_Collector.Controllers
             {
                 return RedirectToAction("Index");
             }
-
-            var customer = _context.Customer
-                .Include(c => c.IdentityUser)
-                .FirstOrDefault(m => m.Id == id);
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var customer = _context.Customer.Where(c => c.IdentityUserId == userId).SingleOrDefault();
 
             if (customer == null)
             {
-                return NotFound();
+                return RedirectToAction("Index");
             }
 
             return View(customer);
@@ -145,18 +130,91 @@ namespace Trash_Collector.Controllers
 
         // POST: Customers/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            var customer = _context.Customer.Find(id);
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var customer = _context.Customer.Where(c => c.IdentityUserId == userId).SingleOrDefault();
+            customer.IdentityUserId = userId;
             _context.Customer.Remove(customer);
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
-
-        private bool CustomerExists(int id)
+        public ActionResult RequestPickup(int? id)
         {
-            return _context.Customer.Any(e => e.Id == id);
+            if (id == null)
+            {
+                return RedirectToAction("Index");
+            }
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var customer = _context.Customer.Where(c => c.IdentityUserId == userId).SingleOrDefault();
+            customer.BeenPicked = false;
+            if (customer == null)
+            {
+                return RedirectToAction("Index");
+            }
+            return View(customer);
         }
+
+        [HttpPost]
+        public ActionResult RequestPickup(int id, [Bind("CustomPickup,BeenPicked")] Customer customer)
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var custInfo = _context.Customer.Where(c => c.IdentityUserId == userId).SingleOrDefault();
+            custInfo.CustomPickup = customer.CustomPickup;
+             _context.SaveChanges();
+            return RedirectToAction("Details");
+        }
+
+
+        public ActionResult ChangeWeeklyPickup(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("Index");
+            }
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var customer = _context.Customer.Where(c => c.IdentityUserId == userId).SingleOrDefault();
+            if (customer == null)
+            {
+                return RedirectToAction("Index");
+            }
+            return View(customer);
+        }
+
+        [HttpPost]
+        public ActionResult ChangeWeeklyPickup(int id, [Bind("DayWeek")] Customer customer)
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var custInfo = _context.Customer.Where(c => c.IdentityUserId == userId).SingleOrDefault();
+            custInfo.DayWeek = customer.DayWeek;
+            _context.SaveChanges();
+            return RedirectToAction("Details");
+        }
+        public ActionResult TempSuspendPickup(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("Index");
+            }
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var customer = _context.Customer.Where(c => c.IdentityUserId == userId).SingleOrDefault();
+            if (customer == null)
+            {
+                return RedirectToAction("Index");
+            }
+            return View(customer);
+        }
+
+        [HttpPost]
+        public ActionResult TempSuspendPickup(int id, [Bind("SuspendStart,SuspendEnd")] Customer customer)
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var custInfo = _context.Customer.Where(c => c.IdentityUserId == userId).SingleOrDefault();
+            custInfo.SuspendStart = customer.SuspendStart;
+            custInfo.SuspendEnd = customer.SuspendEnd;
+            _context.SaveChanges();
+            return RedirectToAction("Details");
+        }
+
     }
 }

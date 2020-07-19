@@ -3,9 +3,14 @@
 
 <h1>Welcome @Model.FirstName @Model.LastName </h1>
 
-<h4>Balance: @Model.CustomerBalance</h4>
-@Html.ActionLink("Edit", "Edit", new { id = Model.Id })
+<h4>Your Current Account Balance: @Model.CustomerBalance</h4>
+
+@Html.ActionLink("View/Change Personal Information", "Edit", new { id = Model.Id })
 <br />
-@Html.ActionLink("Details", "Details", new { id = Model.Id })
+@Html.ActionLink("Delete Personal Information", "Delete", new { id = Model.Id })
 <br />
-@Html.ActionLink("Delete", "Delete", new { id = Model.Id })
+@Html.ActionLink("Change Weekly Pickup Day","ChangeWeeklyPickup",new {id=Model.Id })
+<br />
+@Html.ActionLink("Request Additional Pickup","RequestPickup",new { id=Model.Id})
+<br />
+@Html.ActionLink("Temporarily Suspend Pickups","TempSuspendPickup",new { id = Model.Id })
