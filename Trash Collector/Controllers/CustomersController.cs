@@ -47,7 +47,7 @@ namespace Trash_Collector.Controllers
             return View(customer);
         }
         // GET: Customers/Create
-        public IActionResult Create()
+        public ActionResult Create()
         {
             return View();
         }
@@ -56,7 +56,7 @@ namespace Trash_Collector.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public IActionResult Create([Bind("Id,IdentityUserId,FirstName,LastName,PhoneNumber,Address,City,State,ZipCode,CustomerBalance,DayWeek")] Customer customer)
+        public IActionResult Create([Bind("Id,FirstName,LastName,PhoneNumber,Address,City,State,ZipCode,DayWeek")] Customer customer)
         {
             if (ModelState.IsValid)
             {
@@ -89,7 +89,7 @@ namespace Trash_Collector.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult Edit([Bind("Id,IdentityUserId,FirstName,LastName,PhoneNumber,Address,City,State,ZipCode,DayWeek")] Customer customer)
+        public ActionResult Edit([Bind("Id,FirstName,LastName,PhoneNumber,Address,City,State,ZipCode,DayWeek")] Customer customer)
         {
             if (ModelState.IsValid)
             {
@@ -97,7 +97,6 @@ namespace Trash_Collector.Controllers
                 {
                     var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                     customer.IdentityUserId = userId;
-                    //_context.Entry(customer).State = EntityState.Modified;
                     _context.Customer.Update(customer);
                     _context.SaveChanges();
                 }
@@ -117,8 +116,7 @@ namespace Trash_Collector.Controllers
             {
                 return RedirectToAction("Index");
             }
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var customer = _context.Customer.Where(c => c.IdentityUserId == userId).SingleOrDefault();
+            var customer = _context.Customer.Where(c => c.Id == id).SingleOrDefault();
 
             if (customer == null)
             {
@@ -132,9 +130,7 @@ namespace Trash_Collector.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var customer = _context.Customer.Where(c => c.IdentityUserId == userId).SingleOrDefault();
-            customer.IdentityUserId = userId;
+            var customer = _context.Customer.Where(c => c.Id == id).SingleOrDefault();
             _context.Customer.Remove(customer);
             _context.SaveChanges();
             return RedirectToAction("Index");
@@ -145,9 +141,7 @@ namespace Trash_Collector.Controllers
             {
                 return RedirectToAction("Index");
             }
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var customer = _context.Customer.Where(c => c.IdentityUserId == userId).SingleOrDefault();
-            customer.BeenPicked = false;
+            var customer = _context.Customer.Where(c => c.Id == id).SingleOrDefault();
             if (customer == null)
             {
                 return RedirectToAction("Index");
@@ -156,15 +150,14 @@ namespace Trash_Collector.Controllers
         }
 
         [HttpPost]
-        public ActionResult RequestPickup(int id, [Bind("CustomPickup,BeenPicked")] Customer customer)
+        public ActionResult RequestPickup(int id, [Bind("CustomPickup")] Customer customer)
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var custInfo = _context.Customer.Where(c => c.IdentityUserId == userId).SingleOrDefault();
+            var custInfo = _context.Customer.Where(c => c.Id == id).SingleOrDefault();
             custInfo.CustomPickup = customer.CustomPickup;
+            custInfo.BeenPicked = false;
              _context.SaveChanges();
             return RedirectToAction("Details");
         }
-
 
         public ActionResult ChangeWeeklyPickup(int? id)
         {
@@ -172,8 +165,7 @@ namespace Trash_Collector.Controllers
             {
                 return RedirectToAction("Index");
             }
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var customer = _context.Customer.Where(c => c.IdentityUserId == userId).SingleOrDefault();
+            var customer = _context.Customer.Where(c => c.Id == id).SingleOrDefault();
             if (customer == null)
             {
                 return RedirectToAction("Index");
@@ -184,8 +176,7 @@ namespace Trash_Collector.Controllers
         [HttpPost]
         public ActionResult ChangeWeeklyPickup(int id, [Bind("DayWeek")] Customer customer)
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var custInfo = _context.Customer.Where(c => c.IdentityUserId == userId).SingleOrDefault();
+            var custInfo = _context.Customer.Where(c => c.Id == id).SingleOrDefault();
             custInfo.DayWeek = customer.DayWeek;
             _context.SaveChanges();
             return RedirectToAction("Details");
@@ -196,8 +187,7 @@ namespace Trash_Collector.Controllers
             {
                 return RedirectToAction("Index");
             }
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var customer = _context.Customer.Where(c => c.IdentityUserId == userId).SingleOrDefault();
+            var customer = _context.Customer.Where(c => c.Id == id).SingleOrDefault();
             if (customer == null)
             {
                 return RedirectToAction("Index");
@@ -208,8 +198,7 @@ namespace Trash_Collector.Controllers
         [HttpPost]
         public ActionResult TempSuspendPickup(int id, [Bind("SuspendStart,SuspendEnd")] Customer customer)
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var custInfo = _context.Customer.Where(c => c.IdentityUserId == userId).SingleOrDefault();
+            var custInfo = _context.Customer.Where(c => c.Id == id).SingleOrDefault();
             custInfo.SuspendStart = customer.SuspendStart;
             custInfo.SuspendEnd = customer.SuspendEnd;
             _context.SaveChanges();
