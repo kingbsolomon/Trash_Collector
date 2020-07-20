@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Trash_Collector.ActionFilters;
 using Trash_Collector.Data;
 using Trash_Collector.Models;
+using GoogleMaps.LocationServices;
 
 namespace Trash_Collector.Controllers
 {
@@ -62,6 +63,7 @@ namespace Trash_Collector.Controllers
             {
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 customer.IdentityUserId = userId;
+                customer = LongLat(customer);
                 _context.Customer.Add(customer);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
@@ -97,6 +99,7 @@ namespace Trash_Collector.Controllers
                 {
                     var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                     customer.IdentityUserId = userId;
+                    customer = LongLat(customer);
                     _context.Customer.Update(customer);
                     _context.SaveChanges();
                 }
@@ -205,5 +208,36 @@ namespace Trash_Collector.Controllers
             return RedirectToAction("Details");
         }
 
+        public Customer LongLat(Customer customer)
+        {
+            var gls = new GoogleLocationService("AIzaSyD54AJcNoaVgygF0IQ4oK6Kh7W9d17yrc8");
+
+            AddressData[] address = new AddressData[]
+            {
+                new AddressData
+                {
+                    Address = customer.Address,
+                    City = customer.City,
+                    State = customer.State,
+                    Country = "USA",
+                    Zip = customer.ZipCode
+                }
+            };
+
+            try
+            {
+                var latlong = gls.GetLatLongFromAddress(address[0]);
+                var Latitude = latlong.Latitude;
+                var Longitude = latlong.Longitude;
+                customer.Latitude = Latitude;
+                customer.Longtitude = Longitude;
+            }
+            catch (System.Net.WebException ex)
+            {
+                System.Console.WriteLine("Google Maps API Error {0}", ex.Message);
+            }
+
+            return customer;
+        }
     }
 }

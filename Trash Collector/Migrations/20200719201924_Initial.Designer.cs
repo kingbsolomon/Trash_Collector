@@ -10,7 +10,7 @@ using Trash_Collector.Data;
 namespace Trash_Collector.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200719050609_Initial")]
+    [Migration("20200719201924_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,15 +50,15 @@ namespace Trash_Collector.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "87d79e85-b18b-409d-9a25-2320cbd69825",
-                            ConcurrencyStamp = "764b24e3-518d-42db-bb3f-3601bc5659e0",
+                            Id = "d873d8aa-4b4d-4795-9da4-23ff13aa9576",
+                            ConcurrencyStamp = "acbed577-23f3-407a-8c4f-630071d4c343",
                             Name = "Customer",
                             NormalizedName = "Customer"
                         },
                         new
                         {
-                            Id = "547a9421-bfd0-44d9-98a3-2f87498f77a4",
-                            ConcurrencyStamp = "07513fdc-8e1d-44a4-8ff2-eea171688192",
+                            Id = "27335687-d4c3-4613-9de4-7700a5db59a2",
+                            ConcurrencyStamp = "6196994e-3369-4da3-b470-7bc3f7c642b9",
                             Name = "Employee",
                             NormalizedName = "Employee"
                         });
@@ -274,11 +274,11 @@ namespace Trash_Collector.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("Latitude")
-                        .HasColumnType("real");
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
 
-                    b.Property<float>("Longtitude")
-                        .HasColumnType("real");
+                    b.Property<double>("Longtitude")
+                        .HasColumnType("float");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()

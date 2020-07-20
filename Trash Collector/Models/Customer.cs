@@ -45,9 +45,9 @@ namespace Trash_Collector.Models
         [Required, MaxLength(5)]
         public string ZipCode { get; set; }
 
-        public float Longtitude { get; set; }
+        public double Longtitude { get; set; }
 
-        public float Latitude { get; set; }
+        public double Latitude { get; set; }
 
         public int CreditCard { get; set; }
 

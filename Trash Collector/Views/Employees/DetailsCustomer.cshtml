@@ -1,0 +1,162 @@
+﻿@model Trash_Collector.Models.Customer
+
+@{
+    ViewData["Title"] = "DetailsCustomer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Google Maps example</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD54AJcNoaVgygF0IQ4oK6Kh7W9d17yrc8&callback=initMap">
+</script>
+
+<style type="text/css">
+    #map_canvas {
+        height: 400px;
+    }
+</style>
+
+<h1>DetailsCustomer</h1>
+
+<div>
+    <h4>Customer</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IdentityUser)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IdentityUser.Id)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.City)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.City)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.State)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.State)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ZipCode)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ZipCode)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Longtitude)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Longtitude)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Latitude)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Latitude)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CreditCard)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CreditCard)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CustomPickup)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CustomPickup)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.BeenPicked)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.BeenPicked)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SuspendStart)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SuspendStart)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SuspendEnd)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SuspendEnd)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CustomerBalance)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CustomerBalance)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DayWeek)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DayWeek)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+<script>
+    $(document).ready(function () {
+        // execute
+        (function () {
+            // map options
+            var options = {
+                zoom: 10,
+                center: new google.maps.LatLng(@Model.Latitude,@Model.Longtitude),
+                mapTypeId: google.maps.MapTypeId.TERRAIN,
+                mapTypeControl: false
+            };
+
+            // init map
+            var map = new google.maps.Map(document.getElementById('map_canvas'), options);
+
+                // init markers
+                var marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(@Model.Latitude, @Model.Longtitude),
+                    map: map
+                });
+        })();
+    });
+    </script>
+    <div id="map_canvas"></div>
