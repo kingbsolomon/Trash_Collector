@@ -156,9 +156,13 @@ namespace Trash_Collector.Controllers
         public ActionResult RequestPickup(int id, [Bind("CustomPickup")] Customer customer)
         {
             var custInfo = _context.Customer.Where(c => c.Id == id).SingleOrDefault();
-            custInfo.CustomPickup = customer.CustomPickup;
-            custInfo.BeenPicked = false;
-             _context.SaveChanges();
+            if (customer.CustomPickup != default)
+            {
+                custInfo.CustomPickup = customer.CustomPickup;
+                custInfo.BeenPicked = false;
+                _context.SaveChanges();
+            }
+           
             return RedirectToAction("Details");
         }
 

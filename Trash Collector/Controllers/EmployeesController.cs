@@ -19,6 +19,7 @@ namespace Trash_Collector.Controllers
     public class EmployeesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        public DateTime currentDay = DateTime.Now;
 
         public EmployeesController(ApplicationDbContext context)
         {
@@ -53,14 +54,46 @@ namespace Trash_Collector.Controllers
 
         public ActionResult Default()
         {
+            DefaultEmployeeViewModel defaultEmployee = new DefaultEmployeeViewModel();
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var employee = _context.Employee.Where(e => e.IdentityUserId == userId).SingleOrDefault();
-            var customers = _context.Customer.Where(c => c.ZipCode == employee.ZipCode).ToList();
-            if(customers == null)
+            var dateCheck = _context.Customer.Where(d => d.CustomPickup != default).ToList();
+            defaultEmployee.Customers = _context.Customer.Where(c => c.ZipCode == employee.ZipCode && c.DayWeek == currentDay.DayOfWeek.ToString() && c.SuspendStart != currentDay && c.SuspendEnd < currentDay).ToList();
+            foreach (Customer customer in dateCheck)
+            {
+                if (customer.CustomPickup.DayOfWeek.ToString() == currentDay.DayOfWeek.ToString())
+                {
+                    defaultEmployee.Customers.Add(customer);
+                }
+            }
+            if (defaultEmployee.Customers == null)
             {
                 return Content("<script>alert('None Found');</script>");
             }
-            return View(customers);
+            defaultEmployee.DaysOfWeekList = new SelectList(new List<string>() { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" });
+            return View(defaultEmployee);
+        }
+
+        [HttpPost]
+        public ActionResult Default(DefaultEmployeeViewModel defaultEmployee)
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var employee = _context.Employee.Where(e => e.IdentityUserId == userId).SingleOrDefault();
+            var dateCheck = _context.Customer.Where(d => d.CustomPickup != default).ToList();
+            defaultEmployee.Customers = _context.Customer.Where(c => c.ZipCode == employee.ZipCode && c.DayWeek == currentDay.DayOfWeek.ToString() && c.SuspendStart != currentDay && c.SuspendEnd < currentDay).ToList();
+            foreach (Customer customer in dateCheck)
+            {
+                if (customer.CustomPickup.DayOfWeek.ToString() == defaultEmployee.SelectedDay)
+                {
+                    defaultEmployee.Customers.Add(customer);
+                }
+            }
+            if (defaultEmployee.Customers == null)
+            {
+                return Content("<script>alert('None Found');</script>");
+            }
+            defaultEmployee.DaysOfWeekList = new SelectList(new List<string>() { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" });
+            return View(defaultEmployee);
         }
 
         public ActionResult Approve(int? id)

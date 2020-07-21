@@ -1,105 +1,176 @@
-﻿@model IEnumerable<Trash_Collector.Models.Customer>
+﻿@model DefaultEmployeeViewModel
 
 @{
     ViewData["Title"] = "Default";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD54AJcNoaVgygF0IQ4oK6Kh7W9d17yrc8&callback=InitializeMap">
+</script>
+<style type="text/css">
+    #map_canvas {
+        height: 400px;
+    }
+</style>
+<h2>Welcome, Employee</h2>
+@*<div class="container">
+        <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                Sory By: Day of Week
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="https://localhost:44383/Employees/FilterByDay/?DayofWeek=Sunday">Sunday</a></li>
+                <li><a href="https://localhost:44383/Employees/FilterByDay/?DayofWeek=Monday">Monday</a></li>
+                <li><a href="https://localhost:44383/Employees/FilterByDay/?DayofWeek=Tuesday">Tuesday</a></li>
+                <li><a href="https://localhost:44383/Employees/FilterByDay/?DayofWeek=Wednesday">Wednesday</a></li>
+                <li><a href="https://localhost:44383/Employees/FilterByDay/?DayofWeek=Thursday">Thursday</a></li>
+                <li><a href="https://localhost:44383/Employees/FilterByDay/?DayofWeek=Friday">Friday</a></li>
+                <li><a href="https://localhost:44383/Employees/FilterByDay/?DayofWeek=Saturday">Saturday</a></li>
+                <li><a href="https://localhost:44383/Employees/Default/">View All</a></li>
+
+            </ul>
+        </div>
+    </div>*@
+<form asp-action="Default">
+    <div class="form-group">
+        <label asp-for="SelectedDay" class="control-label"></label>
+        <select asp-for="SelectedDay" class="form-control" asp-items="@Model.DaysOfWeekList"></select>
+        <span asp-validation-for="SelectedDay" class="text-danger"></span>
+    </div>
+    <button type="submit">Filter Day</button>
+
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Customers[0].FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customers[0].LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customers[0].PhoneNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customers[0].Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customers[0].City)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customers[0].State)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customers[0].ZipCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customers[0].DayWeek)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customers[0].CustomPickup)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customers[0].SuspendStart)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customers[0].SuspendEnd)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customers[0].CustomerBalance)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Customers)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.City)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.State)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ZipCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DayWeek)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CustomPickup)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SuspendStart)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SuspendEnd)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CustomerBalance)
+                </td>
+            </tr>
+            <tr class="border-white">
+                <td align="left" colspan="12">
+                    <a asp-action="Approve" asp-route-id="@item.Id">Approve Custom Pickup</a> |
+                    <a asp-action="DetailsCustomer" asp-route-id="@item.Id">View Customer Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@if (Model.Customers.Count > 0)
+{
+    int i = 0;
+
+<script>
+     $(document).ready(function () {
+         // execute
+         (function () {
+             // map options
+             var options = {
+                 zoom: 12,
+                 center: new google.maps.LatLng(@Model.Customers[0].Latitude,@Model.Customers[0].Longtitude),
+                 mapTypeId: google.maps.MapTypeId.ROADMAP
+             };
+
+             // init map
+             var map = new google.maps.Map(document.getElementById('map_canvas'), options);
+             //var marker = new google.maps.Marker({
+@foreach (var item in Model.Customers)
+{
+    if (item.Latitude != default && item.Longtitude != default)
+    {
+        @Html.Raw("var marker" + i + " = new google.maps.Marker({");
+        string markerSet = "position: new google.maps.LatLng(" + item.Latitude + "," + item.Longtitude + "),";
+        @Html.Raw(markerSet);
+        @Html.Raw("map: map}); ");
+        i++;
+    }
+
+}
+         })();
+     });
+</script>
+<div id="map_canvas"></div>
 }
 
-<h1>Default</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.LastName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.PhoneNumber)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Address)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.City)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.State)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ZipCode)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CustomPickup)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.SuspendStart)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.SuspendEnd)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CustomerBalance)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DayWeek)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FirstName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.LastName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PhoneNumber)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Address)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.City)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.State)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ZipCode)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CustomPickup)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.SuspendStart)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.SuspendEnd)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CustomerBalance)
-                    </td>
-                    <td>
-                        <a asp-action="FilterByDay" asp-route-DayofWeek="@item.DayWeek">
-                            @Html.DisplayFor(modelItem => item.DayWeek)
-                        </a>
-                    </td>
-                    <td>
-                        <a asp-action="Approve" asp-route-id="@item.Id">Approve Custom</a> |
-                        <a asp-action="DetailsCustomer" asp-route-id="@item.Id">View Customer Details</a> |
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>

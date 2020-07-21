@@ -52,25 +52,26 @@ namespace Trash_Collector.Models
         public int CreditCard { get; set; }
 
         [DataType(DataType.Date)]
-        [Display(Name ="Custom Trash Pickup Day")]
+        [Display(Name ="Custom Pickup Date")]
         public DateTime CustomPickup { get; set; }
         public bool BeenPicked { get; set; }
 
         [DataType(DataType.Date)]
-        [Display(Name = "Start Date")]
+        [Display(Name = "Suspend Start")]
         public DateTime SuspendStart { get; set; }
 
         [DataType(DataType.Date)]
-        [Display(Name ="End Date")]
+        [Display(Name ="Suspend End")]
         public DateTime SuspendEnd { get; set; }
 
+        [Display(Name ="Balance")]
         public double CustomerBalance
         {
             get { return balance; }
             set { balance = value; }
         }
        
-        [Display(Name ="Trash Pickup Day")]
+        [Display(Name ="Pickup Day")]
         public string DayWeek { get; set; }
 
     }

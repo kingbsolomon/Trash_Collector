@@ -6,16 +6,9 @@
 }
 
 
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Google Maps example</title>
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD54AJcNoaVgygF0IQ4oK6Kh7W9d17yrc8&callback=initMap">
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD54AJcNoaVgygF0IQ4oK6Kh7W9d17yrc8&callback=InitializeMap">
 </script>
-
 <style type="text/css">
     #map_canvas {
         height: 400px;
@@ -137,26 +130,26 @@
     <a asp-action="Index">Back to List</a>
 </div>
 <script>
-    $(document).ready(function () {
-        // execute
-        (function () {
-            // map options
-            var options = {
-                zoom: 10,
-                center: new google.maps.LatLng(@Model.Latitude,@Model.Longtitude),
-                mapTypeId: google.maps.MapTypeId.TERRAIN,
-                mapTypeControl: false
-            };
+     $(document).ready(function () {
+         // execute
+         (function () {
+             // map options
+             var options = {
+                 zoom: 12,
+                 center: new google.maps.LatLng(@Model.Latitude,@Model.Longtitude),
+                 mapTypeId: google.maps.MapTypeId.ROADMAP
+             };
 
-            // init map
-            var map = new google.maps.Map(document.getElementById('map_canvas'), options);
+             // init map
+             var map = new google.maps.Map(document.getElementById('map_canvas'), options);
 
-                // init markers
-                var marker = new google.maps.Marker({
-                    position: new google.maps.LatLng(@Model.Latitude, @Model.Longtitude),
-                    map: map
-                });
-        })();
-    });
-    </script>
-    <div id="map_canvas"></div>
+                 // init markers
+                 var marker = new google.maps.Marker({
+                     position: new google.maps.LatLng(@Model.Latitude, @Model.Longtitude),
+                     map: map
+                 });
+         })();
+     });
+</script>
+<div id="map_canvas"></div>
+
