@@ -15,18 +15,12 @@
     }
 </style>
 
-<h1>DetailsCustomer</h1>
+<h1>Customer Detail View</h1>
 
 <div>
-    <h4>Customer</h4>
+    <h4>Customer: @Model.FirstName @Model.LastName</h4>
     <hr />
     <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.IdentityUser)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.IdentityUser.Id)
-        </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.FirstName)
         </dt>
@@ -70,34 +64,16 @@
             @Html.DisplayFor(model => model.ZipCode)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Longtitude)
+            @Html.DisplayNameFor(model => model.DayWeek)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Longtitude)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Latitude)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Latitude)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CreditCard)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CreditCard)
+            @Html.DisplayFor(model => model.DayWeek)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CustomPickup)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CustomPickup)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.BeenPicked)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.BeenPicked)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.SuspendStart)
@@ -116,12 +92,6 @@
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CustomerBalance)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DayWeek)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DayWeek)
         </dd>
     </dl>
 </div>

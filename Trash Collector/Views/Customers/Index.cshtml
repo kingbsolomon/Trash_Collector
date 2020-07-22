@@ -1,16 +1,28 @@
 ﻿@model Trash_Collector.Models.Customer
 
 
-<h1>Welcome @Model.FirstName @Model.LastName </h1>
+<h1>Welcome, @Model.FirstName @Model.LastName </h1>
 
-<h4>Your Current Account Balance: @Model.CustomerBalance</h4>
+<h4>Your Current Account Balance: $@Model.CustomerBalance</h4>
+<div class="row">
+    <div class="col-md-4">
+        <section>
 
-@Html.ActionLink("View/Change Personal Information", "Edit", new { id = Model.Id })
-<br />
-@Html.ActionLink("Delete Personal Information", "Delete", new { id = Model.Id })
-<br />
-@Html.ActionLink("Change Weekly Pickup Day","ChangeWeeklyPickup",new {id=Model.Id })
-<br />
-@Html.ActionLink("Request Additional Pickup","RequestPickup",new { id=Model.Id})
-<br />
-@Html.ActionLink("Temporarily Suspend Pickups","TempSuspendPickup",new { id = Model.Id })
+            @Html.ActionLink("View/Change Personal Information", "Edit", new { id = Model.Id })
+            <br />
+            @Html.ActionLink("Delete Personal Information", "Delete", new { id = Model.Id })
+            <br />
+            @Html.ActionLink("Change Weekly Pickup Day", "ChangeWeeklyPickup", new { id = Model.Id })
+            <br />
+            @Html.ActionLink("Request Additional Pickup", "RequestPickup", new { id = Model.Id })
+            <br />
+            @Html.ActionLink("Temporarily Suspend Pickups", "TempSuspendPickup", new { id = Model.Id })
+            <br />
+            @Html.ActionLink("Update Credit Card Information", "CreditCard", new { id = Model.Id })
+        </section>
+
+    </div>
+    <div class="col-md-6 col-md-offset-2">
+       <a asp-action="Payment"> <img src="~/images/make-payment-button.png" height="100" /> </a>
+    </div>
+</div>

@@ -1209,6 +1209,10 @@ pre {
     }
 }
 
+#opac {
+    opacity: 0.6;
+}
+
 @media (min-width: 768px) {
     .col-md {
         -ms-flex-preferred-size: 0;

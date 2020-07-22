@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO.Compression;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -80,7 +81,15 @@ namespace Trash_Collector.Controllers
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var employee = _context.Employee.Where(e => e.IdentityUserId == userId).SingleOrDefault();
             var dateCheck = _context.Customer.Where(d => d.CustomPickup != default).ToList();
-            defaultEmployee.Customers = _context.Customer.Where(c => c.ZipCode == employee.ZipCode && c.DayWeek == currentDay.DayOfWeek.ToString() && c.SuspendStart != currentDay && c.SuspendEnd < currentDay).ToList();
+
+            if (defaultEmployee.SelectedDay is null)
+            {
+                defaultEmployee.Customers = _context.Customer.Where(c => c.ZipCode == employee.ZipCode && (c.DayWeek == currentDay.DayOfWeek.ToString() || c.CustomPickup.ToString("dddd") == currentDay.ToString("dddd")) && c.SuspendStart != currentDay && c.SuspendEnd < currentDay).ToList();
+            }
+            else
+            {
+                defaultEmployee.Customers = _context.Customer.Where(c => c.ZipCode == employee.ZipCode && c.DayWeek == defaultEmployee.SelectedDay && c.SuspendStart != currentDay && c.SuspendEnd < currentDay).ToList();
+            }
             foreach (Customer customer in dateCheck)
             {
                 if (customer.CustomPickup.DayOfWeek.ToString() == defaultEmployee.SelectedDay)
@@ -95,7 +104,16 @@ namespace Trash_Collector.Controllers
             defaultEmployee.DaysOfWeekList = new SelectList(new List<string>() { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" });
             return View(defaultEmployee);
         }
+        public void CheckPickStatus(int id)
+        {
+            var customer = _context.Customer.Where(c => c.Id == id).SingleOrDefault();
 
+            if (customer.CustomPickup.ToString("dddd") == currentDay.ToString("dddd") || customer.DayWeek == customer.CustomPickup.DayOfWeek.ToString())
+            {
+                customer.BeenPicked = false;
+                _context.Update(customer);
+            }
+        }
         public ActionResult Approve(int? id)
         {
             if (id == null)
@@ -113,13 +131,24 @@ namespace Trash_Collector.Controllers
         [HttpPost]
         public ActionResult Approve(int id, [Bind("BeenPicked")] Customer customer)
         {
-            if (customer.BeenPicked)
+            CheckPickStatus(id);
+            var custUpdate = _context.Customer.Where(c => c.Id == id).SingleOrDefault();
+
+            if (!custUpdate.BeenPicked)
             {
-                var custUpdate = _context.Customer.Where(c => c.Id == id).SingleOrDefault();
-                custUpdate.CustomPickup = default;
-                custUpdate.CustomerBalance += 25;
-                custUpdate.BeenPicked = customer.BeenPicked;
-                _context.SaveChanges();
+                if (custUpdate.CustomPickup.ToString("dddd") == currentDay.ToString("dddd"))
+                {
+                    custUpdate.CustomPickup = default;
+                    custUpdate.CustomerBalance += 25;
+                    custUpdate.BeenPicked = true;
+                    _context.SaveChanges();
+                }
+                else if (custUpdate.DayWeek == currentDay.DayOfWeek.ToString())
+                {
+                    custUpdate.CustomerBalance += 25;
+                    custUpdate.BeenPicked = true;
+                    _context.SaveChanges();
+                }
             }
             return RedirectToAction("Default");
         }

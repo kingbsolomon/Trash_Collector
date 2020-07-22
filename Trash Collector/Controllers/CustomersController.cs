@@ -12,6 +12,7 @@ using Trash_Collector.ActionFilters;
 using Trash_Collector.Data;
 using Trash_Collector.Models;
 using GoogleMaps.LocationServices;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Trash_Collector.Controllers
 {
@@ -57,7 +58,7 @@ namespace Trash_Collector.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public IActionResult Create([Bind("Id,FirstName,LastName,PhoneNumber,Address,City,State,ZipCode,DayWeek")] Customer customer)
+        public IActionResult Create([Bind("Id,FirstName,LastName,PhoneNumber,Address,City,State,ZipCode")] Customer customer)
         {
             if (ModelState.IsValid)
             {
@@ -156,10 +157,9 @@ namespace Trash_Collector.Controllers
         public ActionResult RequestPickup(int id, [Bind("CustomPickup")] Customer customer)
         {
             var custInfo = _context.Customer.Where(c => c.Id == id).SingleOrDefault();
-            if (customer.CustomPickup != default)
+            if (customer.CustomPickup != default && customer.DayWeek != customer.CustomPickup.DayOfWeek.ToString())
             {
                 custInfo.CustomPickup = customer.CustomPickup;
-                custInfo.BeenPicked = false;
                 _context.SaveChanges();
             }
            
@@ -188,7 +188,8 @@ namespace Trash_Collector.Controllers
             _context.SaveChanges();
             return RedirectToAction("Details");
         }
-        public ActionResult TempSuspendPickup(int? id)
+
+        public ActionResult CreditCard(int? id)
         {
             if (id == null)
             {
@@ -202,6 +203,28 @@ namespace Trash_Collector.Controllers
             return View(customer);
         }
 
+        [HttpPost]
+        public ActionResult CreditCard(int id, [Bind("CreditCard")] Customer customer)
+        {
+            var custInfo = _context.Customer.Where(c => c.Id == id).SingleOrDefault();
+            custInfo.CreditCard = customer.CreditCard;
+            _context.SaveChanges();
+            return RedirectToAction("Details");
+        }
+
+        public ActionResult TempSuspendPickup(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("Index");
+            }
+            var customer = _context.Customer.Where(c => c.Id == id).SingleOrDefault();
+            if (customer == null)
+            {
+                return RedirectToAction("Index");
+            }
+            return View(customer);
+        }
         [HttpPost]
         public ActionResult TempSuspendPickup(int id, [Bind("SuspendStart,SuspendEnd")] Customer customer)
         {

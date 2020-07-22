@@ -49,6 +49,7 @@ namespace Trash_Collector.Models
 
         public double Latitude { get; set; }
 
+        [Display(Name ="Credit Card")]
         public int CreditCard { get; set; }
 
         [DataType(DataType.Date)]
@@ -64,7 +65,7 @@ namespace Trash_Collector.Models
         [Display(Name ="Suspend End")]
         public DateTime SuspendEnd { get; set; }
 
-        [Display(Name ="Balance")]
+        [Display(Name ="Account Balance")]
         public double CustomerBalance
         {
             get { return balance; }
