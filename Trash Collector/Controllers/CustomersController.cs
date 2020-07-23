@@ -273,5 +273,14 @@ namespace Trash_Collector.Controllers
             return View();
         }
 
+        public ActionResult purchase(int id)
+        {
+            var customer = _context.Customer.Where(c => c.Id == id).SingleOrDefault();
+            customer.CustomerBalance -= 25;
+            _context.Customer.Update(customer);
+            _context.SaveChanges();
+            return RedirectToAction("Details");
+        }
+
     }
 }
