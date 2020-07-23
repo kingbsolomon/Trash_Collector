@@ -1,0 +1,20 @@
+﻿@model Trash_Collector.Models.Customer
+@{
+    ViewData["Title"] = "Payment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Payment</h1>
+<div>
+    <form action="/purchase" method="POST">
+        <script src="https://checkout.stripe.com/checkout.js"
+                class="stripe-button"
+                data-key="pk_test_TYooMQauvdEDq54NiTphI7jx"
+                data-name="Alamance County Land Fill"
+                data-description="Account Balance"
+                data-amount="{{100}}"
+                data-currency="usd">
+        </script>
+    </form>
+</div>
+

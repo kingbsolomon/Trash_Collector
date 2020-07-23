@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Trash_Collector.ActionFilters;
+using Stripe;
 
 namespace Trash_Collector
 {
@@ -78,6 +79,8 @@ namespace Trash_Collector
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+            StripeConfiguration.ApiKey = "pk_test_51H7pRTHVSJCHPuZamjwapU7q2qY8eJn1NIOb5BJwVFlhY54sE9lZyTa4JAQY7lIdWbPahwSKoICxFjfPCrZGRTyg001ePMYgzt";
         }
     }
 }

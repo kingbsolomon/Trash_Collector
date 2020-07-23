@@ -13,6 +13,7 @@ using Trash_Collector.Data;
 using Trash_Collector.Models;
 using GoogleMaps.LocationServices;
 using System.Diagnostics.CodeAnalysis;
+using Stripe.Infrastructure;
 
 namespace Trash_Collector.Controllers
 {
@@ -58,7 +59,7 @@ namespace Trash_Collector.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public IActionResult Create([Bind("Id,FirstName,LastName,PhoneNumber,Address,City,State,ZipCode")] Customer customer)
+        public IActionResult Create([Bind("Id,FirstName,LastName,PhoneNumber,Address,City,State,ZipCode,DayWeek")] Customer customer)
         {
             if (ModelState.IsValid)
             {
@@ -212,6 +213,7 @@ namespace Trash_Collector.Controllers
             return RedirectToAction("Details");
         }
 
+
         public ActionResult TempSuspendPickup(int? id)
         {
             if (id == null)
@@ -266,5 +268,10 @@ namespace Trash_Collector.Controllers
 
             return customer;
         }
+        public ActionResult Payment(int id)
+        {
+            return View();
+        }
+
     }
 }

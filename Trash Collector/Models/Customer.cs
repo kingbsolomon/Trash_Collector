@@ -22,15 +22,15 @@ namespace Trash_Collector.Models
         public IdentityUser IdentityUser { get; set; }
 
         [Required]
-        [Display(Name ="First Name")]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
         [Required]
-        [Display(Name="Last Name")]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
         [Required, Phone]
-        [Display(Name="Phone Number")]
+        [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
 
         [Required]
@@ -49,11 +49,11 @@ namespace Trash_Collector.Models
 
         public double Latitude { get; set; }
 
-        [Display(Name ="Credit Card")]
+        [Display(Name = "Credit Card")]
         public int CreditCard { get; set; }
 
         [DataType(DataType.Date)]
-        [Display(Name ="Custom Pickup Date")]
+        [Display(Name = "Custom Pickup Date")]
         public DateTime CustomPickup { get; set; }
         public bool BeenPicked { get; set; }
 
@@ -62,17 +62,17 @@ namespace Trash_Collector.Models
         public DateTime SuspendStart { get; set; }
 
         [DataType(DataType.Date)]
-        [Display(Name ="Suspend End")]
+        [Display(Name = "Suspend End")]
         public DateTime SuspendEnd { get; set; }
 
-        [Display(Name ="Account Balance")]
+        [Display(Name = "Account Balance")]
         public double CustomerBalance
         {
             get { return balance; }
             set { balance = value; }
         }
-       
-        [Display(Name ="Pickup Day")]
+
+        [Display(Name = "Pickup Day")]
         public string DayWeek { get; set; }
 
     }
